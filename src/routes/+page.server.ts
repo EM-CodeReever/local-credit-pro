@@ -26,7 +26,6 @@ export const actions = {
                 path: '/',
                 maxAge: 60 * 60 * 24 * 7
             });
-            // redirect(300,'/dashboard');
         } else {
             return fail(400, { message: "Invalid login, check your email and password", incorrect: true });
         }

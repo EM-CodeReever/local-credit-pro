@@ -1,19 +1,19 @@
 <script lang="ts">
-    import type { PageData } from './$types';
-    import {testCustomer} from '$lib'
-    import AccountCard from '../../components/AccountCard.svelte';
+    import type { ActionData, PageData } from './$types';
+    import AccountCard from '$components/AccountCard.svelte';
     import { goto } from '$app/navigation';
     import { enhance } from '$app/forms';
-    import type { ServerLoad } from '@sveltejs/kit';
     export let data: PageData;
+    export let form: ActionData
     import type { Account } from '@prisma/client';
     $: data = data;
     let customerAccounts = data.cusomter?.accounts as Account[];
-    console.log(data.customerName);
-    console.log(data.customerID);
-    
- 
-    
+
+    let error = {
+        bill: "",
+        transfer: ""
+    }
+
 </script>
 
 <section class="w-full h-full py-20 px-32">
@@ -53,7 +53,7 @@
     <input class="modal-state" id="modal-1" type="checkbox" />
     <div class="modal">
         <label class="modal-overlay" for="modal-1"></label>
-        <form class="modal-content w-fit flex flex-col gap-5" method="post" action="?/createAccount">
+        <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/createAccount">
             <label for="modal-1" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <h2 class="text-xl">Open an Account</h2>
             <div class="form-group">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="flex gap-3">
-                <button class="btn btn-error btn-block">Cancel</button>
+                <label for="modal-3"  class="btn btn-error btn-block">Cancel</label>
                 <button class="btn btn-block btn-success">Confirm</button>
             </div>
         </form>
@@ -78,29 +78,40 @@
     <input class="modal-state" id="modal-2" type="checkbox" />
     <div class="modal">
         <label class="modal-overlay" for="modal-2"></label>
-        <form class="modal-content w-fit flex flex-col gap-5">
+        <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/transferFunds" use:enhance={()=>{
+            
+            return async ({ result, update }) => {
+                console.log(result.type);
+                if(result.type == "failure"){
+                    error.transfer = String(result.data?.message)
+                }else if(result.type == "success"){
+                    goto('/dashboard', {invalidateAll: true})
+                }
+            }
+        }}>
             <label for="modal-2" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <h2 class="text-xl">Transfer funds</h2>
             <div class="form-group">
                 <div>
-                    <label for="" class="form-label">Seclect an account to transfer from</label>
-                    <select class="select select-primary">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
+                    <label for="from" class="form-label">Select an account to transfer from</label>
+                    <select class="select select-primary" name="from">
+                        {#each customerAccounts as account}
+                                <option value={account.accountNumber}>{account.accountType} - {account.accountNumber}</option>
+                            {/each}
                     </select>
                 </div>
                 <div>
-                    <label for="" class="form-label">Enter the recipient account number</label>
-                    <input class="input input-primary" type="number">
+                    <label for="to" class="form-label">Enter the recipient account number</label>
+                    <input class="input input-primary" type="number" name="to">
                 </div>
                 <div>
-                    <label for="" class="form-label">Enter the amount to transfer</label>
-                    <input class="input input-primary" type="number">
+                    <label for="amount" class="form-label">Enter the amount to transfer</label>
+                    <input class="input input-primary" type="number" name="amount">
                 </div>
             </div>
+            <span class="text-error text-sm ml-2">{error.transfer}</span>
             <div class="flex gap-3">
-                <button class="btn btn-error btn-block">Cancel</button>
+                <label for="modal-3"  class="btn btn-error btn-block">Cancel</label>
                 <button class="btn btn-block btn-success">Confirm</button>
             </div>
         </form>
@@ -110,36 +121,48 @@
     <input class="modal-state" id="modal-3" type="checkbox" />
     <div class="modal">
         <label class="modal-overlay" for="modal-3"></label>
-        <div class="modal-content w-96 flex flex-col gap-5">
+        <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/payBill" use:enhance={()=>{
+            
+            return async ({ result, update }) => {
+                console.log(result.type);
+                if(result.type == "failure"){
+                    error.bill = String(result.data?.message)
+                }else if(result.type == "success"){
+                    goto('/dashboard', {invalidateAll: true})
+                }
+            }
+        
+        }}>
             <label for="modal-3" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
             <h2 class="text-xl">Pay a bill</h2>
                 <div class="form-group">
                     <div>
-                        <label for="" class="form-label">Seclect a biller</label>
-                        <select class="select select-primary">
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
+                        <label for="" class="form-label">Select a biller</label>
+                        <select class="select select-primary" name="bill">
+                            <option>JPS Co* - 3124</option>
+                            <option>Flow - 4913</option>
+                            <option>LCP Loan Payment</option>
                         </select>
                     </div>
                     <div>
                         <label for="" class="form-label">Select an account to pay from</label>
-                        <select class="select select-primary">
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
+                        <select class="select select-primary" name="from">
+                            {#each customerAccounts as account}
+                                <option value={account.accountNumber}>{account.accountType} - {account.accountNumber}</option>
+                            {/each}
                         </select>
                     </div>
                     <div>
                         <label for="" class="form-label">Enter bill amount</label>
-                        <input class="input input-primary" type="number">
+                        <input class="input input-primary" type="number" name="amount">
                     </div>
                 </div>
+                <span class="text-error text-sm ml-2">{error.bill}</span>
             <div class="flex gap-3">
-                <button class="btn btn-error btn-block">Cancel</button>
+                <label for="modal-3"  class="btn btn-error btn-block">Cancel</label>
                 <button class="btn btn-block btn-success">Confirm</button>
             </div>
-        </div>
+        </form>
     </div>
 
 </section>
