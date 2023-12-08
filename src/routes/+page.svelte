@@ -19,6 +19,10 @@
  let password = '';
 </script>
 
+<svelte:head>
+    <title>Local Credit Pro</title>
+</svelte:head>
+
 <section class="h-full flex justify-center items-center w-full p-20" data-theme="light">
     <div  class="flex flex-col justify-center space-y-10 bg-gray-300 py-10 px-20 rounded-lg">
         <span class="text-center">

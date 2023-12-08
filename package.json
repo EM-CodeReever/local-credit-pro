@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@prisma/client": "^5.7.0",
 		"prisma": "^5.7.0",
-		"rippleui": "^1.12.1"
+		"rippleui": "^1.12.1",
+		"svelte-french-toast": "^1.2.0"
 	}
 }

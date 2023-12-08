@@ -1,8 +1,10 @@
 <script lang="ts">
     import type { ActionData, PageData } from './$types';
     import AccountCard from '$components/AccountCard.svelte';
-    import { goto } from '$app/navigation';
+    import { goto, invalidateAll } from '$app/navigation';
     import { enhance } from '$app/forms';
+    import { onMount } from 'svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
     export let data: PageData;
     export let form: ActionData
     import type { Account } from '@prisma/client';
@@ -14,7 +16,15 @@
         transfer: ""
     }
 
+    
+
+
 </script>
+<svelte:head>
+    <title>Dashboard</title>
+</svelte:head>
+
+<Toaster />
 
 <section class="w-full h-full py-20 px-32">
     <div class="flex justify-between items-center">
@@ -85,7 +95,12 @@
                 if(result.type == "failure"){
                     error.transfer = String(result.data?.message)
                 }else if(result.type == "success"){
-                    goto('/dashboard', {invalidateAll: true})
+                    toast.success("Funds transferred successfully!", {
+                        duration: 2000,
+                    })
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500);
                 }
             }
         }}>
@@ -121,14 +136,19 @@
     <input class="modal-state" id="modal-3" type="checkbox" />
     <div class="modal">
         <label class="modal-overlay" for="modal-3"></label>
-        <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/payBill" use:enhance={()=>{
+        <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/payBill"  use:enhance={()=>{
             
             return async ({ result, update }) => {
                 console.log(result.type);
                 if(result.type == "failure"){
                     error.bill = String(result.data?.message)
                 }else if(result.type == "success"){
-                    goto('/dashboard', {invalidateAll: true})
+                    toast.success("Funds transferred successfully!", {
+                        duration: 2000,
+                    })
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500);
                 }
             }
         
