@@ -4,11 +4,7 @@ import { PrismaClient } from '@prisma/client';
 let prisma = new PrismaClient();
 
 export const load = (async ({cookies,parent}) => {
-    let stuff = await parent()
-    console.log('stuff: ', stuff);
-    return {
-        
-    };
+    await parent()
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -50,6 +46,9 @@ export const actions: Actions = {
         const from = data.get('from');
         const to = data.get('to');
         const amount = data.get('amount');
+        if(isNaN(parseInt(from as string)) || isNaN(parseInt(to as string)) || isNaN(parseInt(amount as string))) {
+            return fail(400, { message: "Invalid request, check your input"});
+        }
         let fromAccount = await prisma.account.findFirst({
             where: {
                 accountNumber: parseInt(from as string)

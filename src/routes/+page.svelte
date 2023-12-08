@@ -23,7 +23,7 @@
     <div  class="flex flex-col justify-center space-y-10 bg-gray-300 py-10 px-20 rounded-lg">
         <span class="text-center">
             <p class="text-4xl font-semibold">Local Credit Pro</p>
-            <p>some slogan for the company</p>
+            <p>Safe banking you can trust</p>
         </span>
         {#if !userSelect}
         <span class="flex flex-col space-y-3 justify-center">
@@ -31,7 +31,10 @@
                 login = true
                 userSelect = true
             }}>Login</button>
-            <button class="btn btn-success">Create Account</button>
+            <button class="btn btn-success" on:click={()=>{
+                register = true
+                userSelect = true
+            }}>Create Account</button>
         </span>
         {:else if login}
         <div> 
@@ -57,7 +60,7 @@
                 
             }}>
                 <div class="w-full">
-                    <label class="form-label"  for="email">email</label>
+                    <label class="form-label"  for="email">Email</label>
                     <input class="input input-solid max-w-full" type="email" name="loginEmail" id="email" bind:value={email} />
                 </div>
                 <div class="w-full">
@@ -75,19 +78,14 @@
         </div>
         {:else if register}
         <div>
-            <form class="form-group" method="post" action="/register" use:enhance={({cancel})=>{
-                if(c.name == "" || c.emailAddress == "" || c.phoneNumber == "" || c.username == "" || c.password == ""){
-                        error = true
-                        errorMsg = "Please fill out all feilds"
-                        cancel()
-                    }
+            <form class="form-group" method="post" action="?/register" use:enhance={({})=>{
+
                 return async ({ result, update }) => {
                     if(result.type == "success"){
-                        goto('/dashboard')
+                        goto('/dashboard', {invalidateAll: true})
                         
                     }else if(result.type == "failure"){
                         console.log("result", result.data?.message);
-                        // console.log(form?.message); //null
                         error = true
                         errorMsg = result.data?.message
                     }
@@ -99,11 +97,11 @@
                     <input class="input input-solid max-w-full" type="name" name="name" bind:value={c.name} />
                 </div>
                 <div class="w-full">
-                    <label class="form-label" for="email">email</label>
+                    <label class="form-label" for="email">Email</label>
                     <input class="input input-solid max-w-full" type="email" name="email" bind:value={c.emailAddress} />
                 </div>
                 <div class="w-full">
-                    <label class="form-label" for="phoneNumber">phoneNumber</label>
+                    <label class="form-label" for="phoneNumber">Phone Number</label>
                     <input class="input input-solid max-w-full" type="phoneNumber" name="phoneNumber" bind:value={c.phoneNumber} />
                 </div>
                 <div class="w-full">
@@ -114,17 +112,7 @@
                     <label class="form-label" for="password">Password</label>
                     <input class="input input-solid max-w-full" type="password" name="password" bind:value={password} />
                 </div>
-                <button class="btn self-center" type="submit" on:click|preventDefault={()=>{
-                    // prisma.customer.create({
-                    //     data: {
-                    //         name: c.name,
-                    //         emailAddress: c.emailAddress,
-                    //         phoneNumber: c.phoneNumber,
-                    //         username: c.username,
-                    //         password: c.password
-                    //     }
-                    // })
-                }}>
+                <button class="btn self-end btn-primary">
                     Continue
                 </button>
                 {#if error}

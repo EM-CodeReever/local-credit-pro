@@ -19,6 +19,6 @@
     <div class="divider m-0"></div>
     <span class="flex justify-between items-center">
         <p class="text-xs"><span class="font-semibold">Balance:</span> ${balance}</p>
-        <button class="btn btn-sm">view</button>
+        <!-- <button class="btn btn-sm">view</button> -->
     </span>
 </div>

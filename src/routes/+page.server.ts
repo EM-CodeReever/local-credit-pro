@@ -33,11 +33,43 @@ export const actions = {
         
         
 	},
-    register: async ({request}) => {
+    register: async ({request,cookies}) => {
         const data = await request.formData();
-        const email = data.get('registerEmail');
-        const password = data.get('registerPassword');
+        const email = data.get('email');
+        const password = data.get('password');
         const name = data.get('name');
-        const phone = data.get('phone');
+        const username = data.get('username');
+        const phone = data.get('phoneNumber');
+        console.log('email: ', email);
+        console.log('password: ', password);
+        console.log('name: ', name);
+        console.log('username: ', username);
+        console.log('phone: ', phone);
+        if(!email || !password || !name || !username || !phone) {
+            return fail(400, { message: "Please fill out all fields"});
+        }
+        
+        let newCustomer = await prisma.customer.create({
+            data: {
+                emailAddress: email as string,
+                password: password as string,
+                name: name as string,
+                username: username as string,
+                phoneNumber: phone as string
+            }
+        });
+        if(newCustomer) {
+            console.log('newCustomer: ', newCustomer);
+            cookies.set('customerName', `${newCustomer?.name}`, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 7
+            });
+            cookies.set('id', `${newCustomer?.customerID}`, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 7
+            });
+        }else{
+            return fail(400, { message: "Something went wrong, we couldn't create your account"});
+        }
     }
 } satisfies Actions;

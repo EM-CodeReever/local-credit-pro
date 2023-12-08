@@ -56,9 +56,31 @@ test('Computes a transfer between two accounts', async () => {
         }
 })
 
-test('Pay a bill', () => {
-    const account = 1000
-    const bill = 100
-    const newAccount = account - bill
-    expect(newAccount).toBe(900)
-})
+test('Pay a bill', async () => {
+        const from = 3
+        const amount = 100
+
+        let fromAccount = await prisma.account.findFirst({
+            where: {
+                accountNumber: from
+            }
+        });
+        if(fromAccount) {
+            if(fromAccount.balance >= amount) {
+                console.log('paying bill');
+                let updatedAccount = await prisma.account.update({
+                    where: {
+                        accountNumber: fromAccount.accountNumber
+                    },
+                    data: {
+                        balance: fromAccount.balance - amount
+                    }
+                });    
+                expect(updatedAccount.balance).toBe(fromAccount.balance - amount)
+                expect(updatedAccount.balance > 0).toBe(true)  
+            }else{
+                return 
+            }
+        }
+    }
+)

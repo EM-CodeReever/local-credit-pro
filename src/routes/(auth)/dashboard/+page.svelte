@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="flex gap-3">
-                <label for="modal-3"  class="btn btn-error btn-block">Cancel</label>
+                <label for="modal-1"  class="btn btn-error btn-block">Cancel</label>
                 <button class="btn btn-block btn-success">Confirm</button>
             </div>
         </form>
@@ -111,7 +111,7 @@
             </div>
             <span class="text-error text-sm ml-2">{error.transfer}</span>
             <div class="flex gap-3">
-                <label for="modal-3"  class="btn btn-error btn-block">Cancel</label>
+                <label for="modal-2"  class="btn btn-error btn-block">Cancel</label>
                 <button class="btn btn-block btn-success">Confirm</button>
             </div>
         </form>
