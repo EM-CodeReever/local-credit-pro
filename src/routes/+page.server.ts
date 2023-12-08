@@ -40,11 +40,6 @@ export const actions = {
         const name = data.get('name');
         const username = data.get('username');
         const phone = data.get('phoneNumber');
-        console.log('email: ', email);
-        console.log('password: ', password);
-        console.log('name: ', name);
-        console.log('username: ', username);
-        console.log('phone: ', phone);
         if(!email || !password || !name || !username || !phone) {
             return fail(400, { message: "Please fill out all fields"});
         }
@@ -59,7 +54,6 @@ export const actions = {
             }
         });
         if(newCustomer) {
-            console.log('newCustomer: ', newCustomer);
             cookies.set('customerName', `${newCustomer?.name}`, {
                 path: '/',
                 maxAge: 60 * 60 * 24 * 7

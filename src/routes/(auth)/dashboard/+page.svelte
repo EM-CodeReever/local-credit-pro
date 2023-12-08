@@ -91,7 +91,6 @@
         <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/transferFunds" use:enhance={()=>{
             
             return async ({ result, update }) => {
-                console.log(result.type);
                 if(result.type == "failure"){
                     error.transfer = String(result.data?.message)
                 }else if(result.type == "success"){
@@ -139,7 +138,6 @@
         <form class="modal-content w-80 flex flex-col gap-5" method="post" action="?/payBill"  use:enhance={()=>{
             
             return async ({ result, update }) => {
-                console.log(result.type);
                 if(result.type == "failure"){
                     error.bill = String(result.data?.message)
                 }else if(result.type == "success"){

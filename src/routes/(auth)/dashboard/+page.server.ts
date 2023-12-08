@@ -25,7 +25,6 @@ export const actions: Actions = {
             }
         });
         if(newAccount) {
-            console.log('newAccount: ', newAccount);
             prisma.customer.update({
                 where: {
                     customerID: parseInt(id as string)
@@ -61,7 +60,6 @@ export const actions: Actions = {
         });
         if(fromAccount && toAccount) {
             if(fromAccount.balance >= parseInt(amount as string)) {
-                console.log('transfering funds');
                 
                 let updatedFromAccount = await prisma.account.update({
                     where: {
@@ -98,7 +96,6 @@ export const actions: Actions = {
         });
         if(fromAccount) {
             if(fromAccount.balance >= parseInt(amount as string)) {
-                console.log('paying bill');
                 
                 let updatedAccount = await prisma.account.update({
                     where: {

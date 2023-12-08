@@ -42,6 +42,7 @@
         </span>
         {:else if login}
         <div> 
+            
             <form class="form-group" method="post" action="?/login" use:enhance={({cancel,formData})=>{
                 if(email == "" || password == ""){
                         error = true
@@ -54,8 +55,6 @@
 
                         
                     }else if(result.type == "failure"){
-                        console.log("result", result.data?.message);
-                        // console.log(form?.message); //null
                         error = true
                         errorMsg = result.data?.message
                     }
@@ -71,10 +70,16 @@
                     <label class="form-label" for="password">Password</label>
                     <input class="input input-solid max-w-full" type="password" name="loginPassword" id="password" bind:value={password} />
                 </div>
-
-                <button class="btn btn-secondary">
-                    Continue
-                </button>
+                <span class="flex items-center justify-between">
+                    <button class="btn btn-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                          </svg>                  
+                    </button>
+                    <button class="btn btn-secondary">
+                        Continue
+                    </button>
+                </span>
                 {#if error}
                 <p  class="text-error text-sm">{errorMsg}</p>
                 {/if}
@@ -89,7 +94,6 @@
                         goto('/dashboard', {invalidateAll: true})
                         
                     }else if(result.type == "failure"){
-                        console.log("result", result.data?.message);
                         error = true
                         errorMsg = result.data?.message
                     }
@@ -116,9 +120,16 @@
                     <label class="form-label" for="password">Password</label>
                     <input class="input input-solid max-w-full" type="password" name="password" bind:value={password} />
                 </div>
-                <button class="btn self-end btn-primary">
-                    Continue
-                </button>
+                <span class="flex items-center justify-between">
+                    <button class="btn btn-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                          </svg>                  
+                    </button>
+                    <button class="btn btn-secondary">
+                        Continue
+                    </button>
+                </span>
                 {#if error}
                 <p  class="text-error text-sm">{errorMsg}</p>
                 {/if}
